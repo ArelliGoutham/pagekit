@@ -41,13 +41,20 @@ export function ThemeEditorClient({
 
   async function handleSave() {
     setSaving(true);
-    await fetch(`/api/themes/${themeId}`, {
+    const res = await fetch(`/api/themes/${themeId}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ variables: JSON.stringify(variables) }),
     });
+    if (res.ok) {
+      // Re-fetch to sync local state with server
+      const data = await fetch(`/api/themes/${themeId}`).then(r => r.json());
+      const vars = typeof data.variables === "string"
+        ? JSON.parse(data.variables)
+        : data.variables || {};
+      setVariables(vars);
+    }
     setSaving(false);
-    router.refresh();
   }
 
   if (!theme) return <p className="text-gray-500">Loading...</p>;

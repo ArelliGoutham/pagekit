@@ -35,11 +35,16 @@ export async function PATCH(
   const body = await req.json();
   const db = getDb();
 
+  const updateData: Record<string, unknown> = {
+    updatedAt: new Date().toISOString(),
+  };
+
+  if (body.name !== undefined) updateData.name = body.name;
+  if (body.variables !== undefined) updateData.variables = body.variables;
+  if (body.config !== undefined) updateData.config = body.config;
+
   db.update(themes)
-    .set({
-      ...body,
-      updatedAt: new Date().toISOString(),
-    })
+    .set(updateData)
     .where(eq(themes.id, themeId))
     .run();
 

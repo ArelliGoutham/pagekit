@@ -57,7 +57,10 @@ export function updatePage(pageId: string, input: UpdatePageInput) {
   const existing = getPageById(pageId);
   if (!existing) return null;
 
-  db.update(pages).set(input).where(eq(pages.id, pageId)).run();
+  db.update(pages)
+    .set({ ...input, updatedAt: new Date().toISOString() })
+    .where(eq(pages.id, pageId))
+    .run();
   return getPageById(pageId);
 }
 

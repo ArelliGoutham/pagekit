@@ -25,9 +25,6 @@ export function PagesTable({ pages }: { pages: Page[] }) {
     <div>
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold">All Pages ({pages.length})</h2>
-        <Link href="/admin/pages/new">
-          <Button>New Page</Button>
-        </Link>
       </div>
       <Table>
         <TableHeader>
