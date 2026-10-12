@@ -1,0 +1,15 @@
+version: "3.8"
+services:
+  pagekit:
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - pagekit_data:/data
+    environment:
+      - DATABASE_PATH=/data/pagekit.db
+      - AUTH_SECRET=${AUTH_SECRET:-change-me-in-production}
+    restart: unless-stopped
+
+volumes:
+  pagekit_data:
