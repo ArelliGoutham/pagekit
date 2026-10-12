@@ -1,0 +1,45 @@
+import { NextRequest, NextResponse } from "next/server";
+import { auth } from "@/lib/auth";
+import { getDb, navigationNodes } from "@pagekit/db";
+import { eq } from "drizzle-orm";
+
+export async function GET(
+  req: NextRequest,
+  { params }: { params: Promise<{ treeId: string }> }
+) {
+  const { treeId } = await params;
+  const db = getDb();
+  const nodes = db
+    .select()
+    .from(navigationNodes)
+    .where(eq(navigationNodes.treeId, treeId))
+    .all();
+  return NextResponse.json(nodes);
+}
+
+export async function POST(
+  req: NextRequest,
+  { params }: { params: Promise<{ treeId: string }> }
+) {
+  const session = await auth();
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const { treeId } = await params;
+  const body = await req.json();
+  const db = getDb();
+
+  db.insert(navigationNodes).values({
+    id: body.id,
+    treeId,
+    pageId: body.pageId || null,
+    parentNodeId: body.parentNodeId || null,
+    label: body.label,
+    type: body.type || "page",
+    sortOrder: body.sortOrder || 0,
+    icon: body.icon || null,
+  }).run();
+
+  return NextResponse.json({ success: true }, { status: 201 });
+}
