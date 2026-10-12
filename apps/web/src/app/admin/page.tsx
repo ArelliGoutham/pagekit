@@ -1,8 +1,10 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { auth } from "@/lib/auth";
+import { getDashboardStats } from "@/lib/dashboard";
 
 export default async function AdminDashboard() {
   const session = await auth();
+  const stats = getDashboardStats();
 
   return (
     <div>
@@ -15,7 +17,7 @@ export default async function AdminDashboard() {
             <CardTitle className="text-lg">Pages</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-bold">0</p>
+            <p className="text-3xl font-bold">{stats.pageCount}</p>
           </CardContent>
         </Card>
         <Card>
@@ -23,7 +25,7 @@ export default async function AdminDashboard() {
             <CardTitle className="text-lg">Change Batches</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-bold">0</p>
+            <p className="text-3xl font-bold">{stats.batchCount}</p>
           </CardContent>
         </Card>
         <Card>
@@ -31,7 +33,7 @@ export default async function AdminDashboard() {
             <CardTitle className="text-lg">Users</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-bold">0</p>
+            <p className="text-3xl font-bold">{stats.userCount}</p>
           </CardContent>
         </Card>
       </div>
