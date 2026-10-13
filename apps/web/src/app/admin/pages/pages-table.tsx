@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { NewPageDialog } from "./new-page-dialog";
 
 interface Page {
   id: string;
@@ -25,6 +26,7 @@ export function PagesTable({ pages }: { pages: Page[] }) {
     <div>
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold">All Pages ({pages.length})</h2>
+        <NewPageDialog />
       </div>
       <Table>
         <TableHeader>

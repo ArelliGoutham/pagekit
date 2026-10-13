@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/lib/auth";
+import { requireRole } from "@/lib/auth/roles";
 import { getDb, themes } from "@pagekit/db";
 import { eq } from "drizzle-orm";
 
@@ -26,10 +26,8 @@ export async function PATCH(
   req: NextRequest,
   { params }: { params: Promise<{ themeId: string }> }
 ) {
-  const session = await auth();
-  if (!session?.user?.id) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const { error } = await requireRole("admin");
+  if (error) return error;
 
   const { themeId } = await params;
   const body = await req.json();

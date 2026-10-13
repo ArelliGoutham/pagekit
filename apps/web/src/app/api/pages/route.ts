@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/lib/auth";
+import { requireRole } from "@/lib/auth/roles";
 import { getPages, createPage } from "@/lib/pages";
 
 export async function GET() {
@@ -8,10 +8,8 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
-  const session = await auth();
-  if (!session?.user?.id) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const { session, error } = await requireRole("admin", "editor");
+  if (error) return error;
 
   const body = await req.json();
   const page = createPage({
@@ -19,7 +17,7 @@ export async function POST(req: NextRequest) {
     title: body.title,
     content: body.content,
     parentId: body.parentId,
-    createdBy: session.user.id,
+    createdBy: session!.user!.id!,
   });
 
   return NextResponse.json(page, { status: 201 });

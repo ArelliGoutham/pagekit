@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/lib/auth";
+import { requireRole } from "@/lib/auth/roles";
 import { getDb, changeBatches, changeBatchRevisions } from "@pagekit/db";
 import { eq } from "drizzle-orm";
 
@@ -33,10 +33,8 @@ export async function PATCH(
   req: NextRequest,
   { params }: { params: Promise<{ batchId: string }> }
 ) {
-  const session = await auth();
-  if (!session?.user?.id) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const { session, error } = await requireRole("admin", "editor");
+  if (error) return error;
 
   const { batchId } = await params;
   const body = await req.json();
@@ -46,7 +44,7 @@ export async function PATCH(
     .set({
       status: body.status,
       mergedAt: body.status === "merged" ? new Date().toISOString() : null,
-      mergedBy: body.status === "merged" ? session.user.id : null,
+      mergedBy: body.status === "merged" ? session!.user!.id! : null,
     })
     .where(eq(changeBatches.id, batchId))
     .run();

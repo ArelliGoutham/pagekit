@@ -11,6 +11,7 @@ const navItems = [
   { href: "/admin/navigation", label: "Navigation" },
   { href: "/admin/batches", label: "Batches" },
   { href: "/admin/themes", label: "Themes" },
+  { href: "/admin/media", label: "Media" },
 ];
 
 export function AdminNav() {

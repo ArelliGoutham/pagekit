@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/lib/auth";
+import { requireRole } from "@/lib/auth/roles";
 import { getDb, changeBatches, changeBatchRevisions } from "@pagekit/db";
 import { v4 as uuidv4 } from "uuid";
 
@@ -10,10 +10,8 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
-  const session = await auth();
-  if (!session?.user?.id) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const { session, error } = await requireRole("admin", "editor");
+  if (error) return error;
 
   const body = await req.json();
   const batchId = uuidv4();
@@ -23,7 +21,7 @@ export async function POST(req: NextRequest) {
     id: batchId,
     title: body.title,
     description: body.description || "",
-    createdBy: session.user.id,
+    createdBy: session!.user!.id!,
     status: "draft",
   }).run();
 
