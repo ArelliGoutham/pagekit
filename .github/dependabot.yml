@@ -12,6 +12,25 @@ updates:
       all-dependencies:
         patterns:
           - "*"
+        exclude-patterns:
+          - "typescript"
+          - "tailwindcss"
+      typescript:
+        patterns:
+          - "typescript"
+        update-types:
+          - "patch"
+      tailwindcss:
+        patterns:
+          - "tailwindcss"
+        update-types:
+          - "patch"
+          - "minor"
+    ignore:
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major", "version-update:semver-minor"]
+      - dependency-name: "tailwindcss"
+        update-types: ["version-update:semver-major"]
     labels:
       - dependencies
     commit-message:
