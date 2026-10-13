@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, use } from "react";
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
@@ -18,7 +17,6 @@ export function ThemeEditorClient({
   params: Promise<{ themeId: string }>;
 }) {
   const { themeId } = use(params);
-  const router = useRouter();
   const [theme, setTheme] = useState<ThemeData | null>(null);
   const [variables, setVariables] = useState<Record<string, string>>({});
   const [saving, setSaving] = useState(false);

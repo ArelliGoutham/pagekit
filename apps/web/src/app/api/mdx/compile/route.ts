@@ -6,7 +6,7 @@ export async function POST(req: NextRequest) {
   try {
     const compiled = await compileMdx(source);
     return NextResponse.json({ compiled });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: "MDX compilation failed" },
       { status: 400 }
