@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/lib/auth";
+import { requireRole } from "@/lib/auth/roles";
 import {
   getPageById,
   updatePage,
@@ -21,10 +21,8 @@ export async function PATCH(
   req: NextRequest,
   { params }: { params: Promise<{ pageId: string }> }
 ) {
-  const session = await auth();
-  if (!session?.user?.id) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const { session, error } = await requireRole("admin", "editor");
+  if (error) return error;
 
   const { pageId } = await params;
   const body = await req.json();
@@ -38,7 +36,7 @@ export async function PATCH(
         content: existing.content,
         title: existing.title,
         changeSummary: body.changeSummary || "",
-        createdBy: session.user.id,
+        createdBy: session!.user!.id!,
       });
     }
   }
@@ -52,10 +50,8 @@ export async function DELETE(
   req: NextRequest,
   { params }: { params: Promise<{ pageId: string }> }
 ) {
-  const session = await auth();
-  if (!session?.user?.id) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const { error } = await requireRole("admin");
+  if (error) return error;
 
   const { pageId } = await params;
   deletePage(pageId);

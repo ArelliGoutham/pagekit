@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/lib/auth";
+import { requireRole } from "@/lib/auth/roles";
 import { getDb, navigationNodes } from "@pagekit/db";
 import { eq } from "drizzle-orm";
 
@@ -21,10 +21,8 @@ export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ treeId: string }> }
 ) {
-  const session = await auth();
-  if (!session?.user?.id) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const { error } = await requireRole("admin", "editor");
+  if (error) return error;
 
   const { treeId } = await params;
   const body = await req.json();
