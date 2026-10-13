@@ -1,2 +1,14 @@
+node_modules/
+.next/
+dist/
+.turbo/
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
 .superpowers/
 .worktrees/
+.env
+.env.local
+.env.*.local
+coverage/
