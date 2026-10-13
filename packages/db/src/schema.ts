@@ -191,3 +191,31 @@ export const themes = sqliteTable("themes", {
     .notNull()
     .default(sql`(datetime('now'))`),
 });
+
+// ── Settings & Media ────────────────────────────────────────────────────────────
+
+export const settings = sqliteTable("settings", {
+  key: text("key").primaryKey(),
+  value: text("value").notNull().default(""),
+  updatedAt: text("updated_at")
+    .notNull()
+    .default(sql`(datetime('now'))`),
+});
+
+export const media = sqliteTable("media", {
+  id: text("id").primaryKey(),
+  filename: text("filename").notNull(),
+  mimeType: text("mime_type").notNull(),
+  size: integer("size").notNull().default(0),
+  s3Key: text("s3_key").notNull(),
+  s3Url: text("s3_url").notNull(),
+  status: text("status", { enum: ["pending", "ready", "error"] })
+    .notNull()
+    .default("pending"),
+  uploadedBy: text("uploaded_by").references(() => users.id, {
+    onDelete: "set null",
+  }),
+  createdAt: text("created_at")
+    .notNull()
+    .default(sql`(datetime('now'))`),
+});
