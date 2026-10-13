@@ -6,12 +6,12 @@ export default tseslint.config(
   ...tseslint.configs.recommended,
   {
     ignores: [
-      ".next/",
-      "dist/",
-      ".turbo/",
-      "node_modules/",
-      ".worktrees/",
-      "drizzle/",
+      "**/.next/",
+      "**/dist/",
+      "**/.turbo/",
+      "**/node_modules/",
+      "**/.worktrees/",
+      "**/drizzle/",
       "**/components/ui/",      // shadcn/ui generated
       "**/next-env.d.ts",      // Next.js auto-generated
     ],
